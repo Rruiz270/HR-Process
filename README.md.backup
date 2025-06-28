@@ -1,0 +1,337 @@
+# HR Process Automation System
+
+A complete automated HR process system that handles documents, payroll information, sending and receiving emails, and accessing Google Drive spreadsheets. The system provides a comprehensive backend API with automated workflows for HR management.
+
+## Features
+
+### 🔐 Authentication & Authorization
+- JWT-based authentication
+- Role-based access control (Admin, HR, Manager, Employee)
+- Secure password hashing with bcrypt
+- User management and profile updates
+
+### 👥 Employee Management
+- Complete employee lifecycle management
+- Personal and work information tracking
+- Benefits management (Vale Transporte, Vale Refeição, Mobilidade, Health/Dental Insurance)
+- Document management per employee
+- PJ (Pessoa Jurídica) employee support with invoice information
+
+### 💰 Payroll Processing
+- Automated payroll generation
+- Benefits calculation
+- Deductions and additions support
+- Multiple payment methods
+- Invoice requests for PJ employees
+- Payroll approval workflow
+- Comprehensive payroll reports
+
+### 📄 Document Management
+- File upload and storage
+- Document categorization and tagging
+- Expiry date tracking
+- Access control levels
+- Bulk document operations
+- Document lifecycle management
+
+### 📧 Email Automation
+- Invoice request emails
+- Payroll notification emails
+- Document expiry notifications
+- Benefit request notifications
+- Custom email templates
+- Bulk email sending
+
+### 📊 Google Drive Integration
+- Access and manage Google Drive files
+- Read and write Google Sheets
+- Export payroll and employee data
+- File upload to Google Drive
+- Spreadsheet automation
+
+### 🤖 Process Automation
+- Scheduled document expiry checks
+- Monthly payroll generation
+- PJ invoice requests
+- Employee status updates
+- HR report generation
+- Custom automation workflows
+
+## Technology Stack
+
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - Authentication
+- **Nodemailer** - Email sending
+- **Google APIs** - Drive and Sheets integration
+- **Multer** - File upload handling
+- **Cron** - Scheduled tasks
+- **Express Validator** - Input validation
+- **Helmet** - Security middleware
+- **CORS** - Cross-origin resource sharing
+
+### Development Tools
+- **Nodemon** - Development server
+- **Concurrently** - Run multiple commands
+
+## Installation & Setup
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB (v4.4 or higher)
+- npm or yarn
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd hr-process-automation
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Configuration
+Create a `.env` file in the root directory:
+
+```env
+# Server Configuration
+NODE_ENV=development
+PORT=5000
+CLIENT_URL=http://localhost:3000
+
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/hr-process
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+# Email Configuration (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+COMPANY_EMAIL=rh@empresa.com
+
+# Google APIs Configuration
+GOOGLE_APPLICATION_CREDENTIALS=./server/config/google-credentials.json
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:5000/api/auth/google/callback
+
+# File Upload Configuration
+MAX_FILE_SIZE=10485760
+UPLOAD_PATH=./server/uploads
+
+# Security Configuration
+BCRYPT_ROUNDS=10
+SESSION_SECRET=your-session-secret-key
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+```
+
+### 4. Google APIs Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing one
+3. Enable Google Drive API and Google Sheets API
+4. Create service account credentials
+5. Download the JSON credentials file
+6. Place it in `server/config/google-credentials.json`
+
+### 5. Database Setup
+```bash
+# Start MongoDB (if not running as a service)
+mongod
+
+# Or use MongoDB Atlas (cloud)
+# Update MONGODB_URI in .env file
+```
+
+### 6. Start the Application
+```bash
+# Development mode
+npm run dev
+
+# Production mode
+npm start
+```
+
+The server will start on `http://localhost:5000`
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+- `PUT /api/auth/profile` - Update user profile
+- `PUT /api/auth/change-password` - Change password
+
+### Employees
+- `GET /api/employees` - Get all employees
+- `POST /api/employees` - Create new employee
+- `GET /api/employees/:id` - Get employee by ID
+- `PUT /api/employees/:id` - Update employee
+- `DELETE /api/employees/:id` - Delete employee
+- `GET /api/employees/type/pj` - Get PJ employees
+- `GET /api/employees/stats/overview` - Employee statistics
+
+### Payroll
+- `GET /api/payroll` - Get all payroll records
+- `POST /api/payroll` - Create payroll record
+- `GET /api/payroll/:id` - Get payroll by ID
+- `PUT /api/payroll/:id` - Update payroll
+- `PUT /api/payroll/:id/approve` - Approve payroll
+- `POST /api/payroll/:id/request-invoice` - Request invoice
+- `GET /api/payroll/stats/overview` - Payroll statistics
+- `GET /api/payroll/report/generate` - Generate payroll report
+
+### Documents
+- `GET /api/documents` - Get all documents
+- `POST /api/documents` - Upload document
+- `GET /api/documents/:id` - Get document by ID
+- `GET /api/documents/:id/download` - Download document
+- `PUT /api/documents/:id` - Update document
+- `DELETE /api/documents/:id` - Delete document
+- `GET /api/documents/expired/list` - Get expired documents
+
+### Email
+- `POST /api/email/invoice-request` - Send invoice request email
+- `POST /api/email/payroll-notification` - Send payroll notification
+- `POST /api/email/document-expiry` - Send document expiry notification
+- `POST /api/email/benefit-request` - Send benefit request notification
+- `POST /api/email/custom` - Send custom email
+- `GET /api/email/templates` - Get email templates
+- `POST /api/email/test` - Test email configuration
+
+### Google Drive
+- `GET /api/google-drive/files` - List files
+- `GET /api/google-drive/files/:id` - Get file details
+- `GET /api/google-drive/files/:id/download` - Download file
+- `POST /api/google-drive/upload` - Upload file
+- `GET /api/google-drive/sheets/:id` - Read spreadsheet
+- `POST /api/google-drive/sheets/:id/write` - Write to spreadsheet
+- `POST /api/google-drive/sheets/export-payroll` - Export payroll data
+- `POST /api/google-drive/sheets/export-employees` - Export employee data
+
+### Automation
+- `POST /api/automation/schedule` - Schedule automation task
+- `GET /api/automation/scheduled` - Get scheduled tasks
+- `PUT /api/automation/scheduled/:id` - Update scheduled task
+- `DELETE /api/automation/scheduled/:id` - Delete scheduled task
+- `POST /api/automation/run/:taskName` - Run task manually
+- `GET /api/automation/tasks` - Get available tasks
+- `GET /api/automation/stats` - Get automation statistics
+
+## Data Models
+
+### Employee
+- Personal information (name, email, CPF, etc.)
+- Work information (department, position, hire date, etc.)
+- Benefits configuration
+- Document references
+- Invoice information (for PJ employees)
+
+### Payroll
+- Employee reference
+- Payroll period
+- Salary and benefits
+- Deductions and additions
+- Payment information
+- Invoice information
+- Approval workflow
+
+### Document
+- File information
+- Metadata and categorization
+- Related entities
+- Access control
+- Lifecycle management
+
+### User
+- Authentication information
+- Role and permissions
+- Profile data
+- Security features
+
+## Automation Features
+
+### Scheduled Tasks
+- **Daily Document Check** - Check for expiring documents
+- **Monthly Payroll Generation** - Generate payroll for all employees
+- **PJ Invoice Requests** - Request invoices from PJ employees
+- **Employee Status Updates** - Update benefits based on time worked
+- **HR Report Generation** - Generate monthly reports
+
+### Email Automation
+- Invoice request emails for PJ employees
+- Payroll notification emails
+- Document expiry notifications
+- Benefit request notifications
+- Custom email templates
+
+## Security Features
+
+- JWT-based authentication
+- Role-based access control
+- Password hashing with bcrypt
+- Input validation and sanitization
+- Rate limiting
+- CORS configuration
+- Helmet security headers
+- File upload restrictions
+
+## File Structure
+
+```
+hr-process-automation/
+├── server/
+│   ├── config/
+│   │   └── database.js
+│   │   └── google-credentials.json
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── Employee.js
+│   │   ├── Payroll.js
+│   │   ├── Document.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── employees.js
+│   │   ├── payroll.js
+│   │   ├── documents.js
+│   │   ├── email.js
+│   │   ├── googleDrive.js
+│   │   └── automation.js
+│   ├── services/
+│   ├── utils/
+│   │   └── emailService.js
+│   ├── uploads/
+│   └── index.js
+├── package.json
+├── .env.example
+└── README.md
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team or create an issue in the repository. 

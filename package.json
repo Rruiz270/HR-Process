@@ -1,0 +1,28 @@
+{
+  "name": "hr-process-automation",
+  "version": "1.0.0",
+  "description": "Complete automated HR process system with separated frontend and backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "keywords": [
+    "hr",
+    "automation",
+    "payroll",
+    "email",
+    "google-drive",
+    "react",
+    "nodejs"
+  ],
+  "author": "HR Process Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
